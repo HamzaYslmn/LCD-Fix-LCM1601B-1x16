@@ -6,23 +6,23 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 char lcdBuffer[17] = "";  // Buffer to store current LCD content
 
 void printToLCD(const char* text) {
-  for (int i = 0; i < 16; ++i) {
+  int i = 0;
+  // Update only changed characters
+  while (i < 16 && text[i] != '\0') {
     if (text[i] != lcdBuffer[i]) {
       lcd.setCursor(i % 8, i < 8 ? 0 : 1);
       lcd.print(text[i]);
       lcdBuffer[i] = text[i];
     }
-    if (text[i] == '\0') {
-      // Fill the rest of the buffer with spaces
-      for (int j = i; j < 16; ++j) {
-        if (lcdBuffer[j] != ' ') {
-          lcd.setCursor(j % 8, j < 8 ? 0 : 1);
-          lcd.print(' ');
-          lcdBuffer[j] = ' ';
-        }
-      }
-      break;
+    ++i;
+  }
+  while (i < 16) {
+    if (lcdBuffer[i] != ' ') {
+      lcd.setCursor(i % 8, i < 8 ? 0 : 1);
+      lcd.print(' ');
+      lcdBuffer[i] = ' ';
     }
+    ++i;
   }
 }
 
